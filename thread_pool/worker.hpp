@@ -1,6 +1,16 @@
 #ifndef WORKER_HPP
 #define WORKER_HPP
 
+// http://stackoverflow.com/a/25393790/5724090
+// Static/global variable exists in a per-thread context (thread local storage).
+#if defined (__GNUC__)
+    #define ATTRIBUTE_TLS __thread
+#elif defined (_MSC_VER)
+    #define ATTRIBUTE_TLS __declspec(thread)
+#else // !__GNUC__ && !_MSC_VER
+    #error "Define a thread local storage qualifier for your compiler/platform!"
+#endif
+
 #include <fixed_function.hpp>
 #include <mpsc_bounded_queue.hpp>
 #include <atomic>
@@ -75,6 +85,14 @@ private:
 
 /// Implementation
 
+namespace detail {
+    inline size_t * thread_id()
+    {
+        static ATTRIBUTE_TLS size_t tss_id = -1u;
+        return &tss_id;
+    }
+}
+
 inline Worker::Worker(size_t queue_size)
     : m_queue(queue_size)
     , m_running_flag(true)
@@ -92,15 +110,9 @@ inline void Worker::start(size_t id, Worker *steal_donor)
     m_thread = std::thread(&Worker::threadFunc, this, id, steal_donor);
 }
 
-inline static size_t * thread_id()
-{
-    static thread_local size_t tss_id = -1u;
-    return &tss_id;
-}
-
 inline size_t Worker::getWorkerIdForCurrentThread()
 {
-    return *thread_id();
+    return *detail::thread_id();
 }
 
 template <typename Handler>
@@ -116,7 +128,7 @@ inline bool Worker::steal(Task &task)
 
 inline void Worker::threadFunc(size_t id, Worker *steal_donor)
 {
-    *thread_id() = id;
+    *detail::thread_id() = id;
 
     Task handler;
 
