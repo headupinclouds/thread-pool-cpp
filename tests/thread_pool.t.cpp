@@ -7,11 +7,16 @@
 #include <thread>
 #include <tuple>
 
+#include "thread_pool2.t.hpp"
+
+const int FunctionSize = 128;
+using FixedThreadPool=ThreadPool<FunctionSize>;
+
 int main() {
     std::cout << "*** Testing ThreadPool ***" << std::endl;
 
     doTest("post job", []() {
-        ThreadPool pool;
+        FixedThreadPool pool;
 
         std::packaged_task<int()> t([](){
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -26,7 +31,7 @@ int main() {
     });
 
     doTest("process job", []() {
-        ThreadPool pool;
+        FixedThreadPool pool;
 
         std::future<int> r = pool.process([]() {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -39,7 +44,7 @@ int main() {
     struct my_exception {};
 
     doTest("process job with exception", []() {
-        ThreadPool pool;
+        FixedThreadPool pool;
 
         std::future<int> r = pool.process([]() {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -55,15 +60,14 @@ int main() {
 
     doTest("multiple compilation units", []() {
         extern size_t getWorkerIdForCurrentThread();
-        extern size_t getWorkerIdForCurrentThread2();
 
-        ThreadPool pool;
+        FixedThreadPool pool;
 
         std::future<std::tuple<size_t, size_t, size_t, size_t>> r = pool.process([]() {
-            return std::make_tuple(Worker::getWorkerIdForCurrentThread(),
+                return std::make_tuple(FixedThreadPool::FixedWorker::getWorkerIdForCurrentThread(),
                                    *detail::thread_id(),
                                    getWorkerIdForCurrentThread(),
-                                   getWorkerIdForCurrentThread2());
+                                   getWorkerIdForCurrentThread2<128>());
         });
 
         const auto t = r.get();
