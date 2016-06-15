@@ -24,7 +24,7 @@ endif()
 
 #### install
 
-set(TARGET_NAME thread-pool)
+set(TARGET_NAME thread-pool-cpp)
 
 set(config_install_dir "lib/cmake/${TARGET_NAME}")
 set(include_install_dir "include")
