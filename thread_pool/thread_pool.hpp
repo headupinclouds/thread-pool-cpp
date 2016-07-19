@@ -1,7 +1,7 @@
 #ifndef THREAD_POOL_HPP
 #define THREAD_POOL_HPP
 
-#include <worker.hpp>
+#include "worker.hpp"
 #include <atomic>
 #include <stdexcept>
 #include <memory>

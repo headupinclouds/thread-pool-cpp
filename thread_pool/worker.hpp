@@ -11,8 +11,8 @@
     #error "Define a thread local storage qualifier for your compiler/platform!"
 #endif
 
-#include <fixed_function.hpp>
-#include <mpsc_bounded_queue.hpp>
+#include "fixed_function.hpp"
+#include "mpsc_bounded_queue.hpp"
 #include <atomic>
 #include <thread>
 
