@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 project(thread-pool-cpp VERSION 1.0.0)
 
 ADD_DEFINITIONS(-std=c++1y -Wall -Werror -O3)
-  
+
 option(THREAD_POOL_CPP_BUILD_TESTS "Build tests." OFF)
 option(THREAD_POOL_CPP_BUILD_BENCHMARKS "Build benchmarks." OFF)
 
