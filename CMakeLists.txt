@@ -60,7 +60,7 @@ install(
 
 install(
   DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/thread_pool/ # Trailing slash is required
-  DESTINATION "${include_install_dir}/${TARGET_NAME}"
+  DESTINATION "${include_install_dir}/thread_pool" # match local layout
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
   )
 
