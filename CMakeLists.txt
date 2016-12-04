@@ -2,6 +2,8 @@
 
 cmake_minimum_required(VERSION 3.0)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules")
+
 project(thread-pool-cpp VERSION 1.0.0)
 
 ADD_DEFINITIONS(-std=c++1y -Wall -Werror -O3)
@@ -13,6 +15,25 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thread_pool)
 
 # http://stackoverflow.com/a/11583676
 add_library(thread-pool-cpp INTERFACE)
+
+# If true C++11 thread_local support exists, we will use it:
+include(thread_pool_has_thread_local_storage)
+thread_pool_has_thread_local_storage(THREAD_POOL_HAS_THREAD_LOCAL_STORAGE)
+message("THREAD_POOL_HAS_THREAD_LOCAL_STORAGE: ${THREAD_POOL_HAS_THREAD_LOCAL_STORAGE}")
+
+if(NOT THREAD_POOL_HAS_THREAD_LOCAL_STORAGE)
+  # Else, we will check for backups
+  include(thread_pool_has_thread_storage)
+  thread_pool_has_thread_storage(THREAD_POOL_HAS_THREAD_STORAGE)
+  message("THREAD_POOL_HAS_THREAD_STORAGE: ${THREAD_POOL_HAS_THREAD_STORAGE}")
+  if(NOT THREAD_POOL_HAS_THREAD_STORAGE)
+    message(SEND_ERROR "Compiler does not support: thread_local, __thread, or declspec(thread)")
+  endif()
+endif()
+
+if(THREAD_POOL_HAS_THREAD_LOCAL_STORAGE)
+  target_compile_definitions(thread-pool-cpp PUBLIC THREAD_POOL_HAS_THREAD_LOCAL_STORAGE=1)
+endif()
 
 if(THREAD_POOL_CPP_BUILD_TESTS)
   add_subdirectory(tests)
