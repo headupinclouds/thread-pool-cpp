@@ -1,9 +1,14 @@
 #ifndef WORKER_HPP
 #define WORKER_HPP
 
+// Use C++11 thread_local specifier when available, otherwise revert to platforms
+// specific implementations.
+//
 // http://stackoverflow.com/a/25393790/5724090
 // Static/global variable exists in a per-thread context (thread local storage).
-#if defined (__GNUC__)
+#if THREAD_POOL_HAS_THREAD_LOCAL_STORAGE
+    #define ATTRIBUTE_TLS thread_local
+#elif defined (__GNUC__)
     #define ATTRIBUTE_TLS __thread
 #elif defined (_MSC_VER)
     #define ATTRIBUTE_TLS __declspec(thread)
@@ -91,10 +96,11 @@ private:
 /// Implementation
 
 namespace detail {
+      
     inline size_t * thread_id()
     {
         static ATTRIBUTE_TLS size_t tss_id = -1u;
-        return &tss_id;
+        return &tss_id;        
     }
 }
 
