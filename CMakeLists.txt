@@ -13,9 +13,6 @@ option(THREAD_POOL_CPP_BUILD_BENCHMARKS "Build benchmarks." OFF)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/thread_pool)
 
-# http://stackoverflow.com/a/11583676
-add_library(thread-pool-cpp INTERFACE)
-
 # If true C++11 thread_local support exists, we will use it:
 include(thread_pool_has_thread_local_storage)
 thread_pool_has_thread_local_storage(THREAD_POOL_HAS_THREAD_LOCAL_STORAGE)
@@ -27,12 +24,15 @@ if(NOT THREAD_POOL_HAS_THREAD_LOCAL_STORAGE)
   thread_pool_has_thread_storage(THREAD_POOL_HAS_THREAD_STORAGE)
   message("THREAD_POOL_HAS_THREAD_STORAGE: ${THREAD_POOL_HAS_THREAD_STORAGE}")
   if(NOT THREAD_POOL_HAS_THREAD_STORAGE)
-    message(SEND_ERROR "Compiler does not support: thread_local, __thread, or declspec(thread)")
+    message(FATAL_ERROR "Compiler does not support: thread_local, __thread, or declspec(thread)")
   endif()
 endif()
 
+# http://stackoverflow.com/a/11583676
+add_library(thread-pool-cpp INTERFACE)
+
 if(THREAD_POOL_HAS_THREAD_LOCAL_STORAGE)
-  target_compile_definitions(thread-pool-cpp PUBLIC THREAD_POOL_HAS_THREAD_LOCAL_STORAGE=1)
+  target_compile_definitions(thread-pool-cpp INTERFACE THREAD_POOL_HAS_THREAD_LOCAL_STORAGE=1)
 endif()
 
 if(THREAD_POOL_CPP_BUILD_TESTS)
