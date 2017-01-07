@@ -1,6 +1,8 @@
 # Lineage: ruslo/hunter tests scripts
 # test
 
+os: Visual Studio 2015
+
 environment:
 
   matrix:
