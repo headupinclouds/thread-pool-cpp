@@ -11,5 +11,6 @@ python %POLLY_ROOT%\bin\polly.py ^
 --verbose ^
 --config "%1%" ^
 --toolchain "%2%" ^
---test ^
+--fwd THREAD_POOL_CPP_BUILD_TESTS=ON THREAD_POOL_CPP_HAS_CPP14="%3" ^
+--test
 

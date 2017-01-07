@@ -11,15 +11,19 @@ environment:
 
     - TOOLCHAIN: "vs-14-2015-sdk-8-1"
       CONFIG: Release
+      HAS_CPP14: OFF
 
     - TOOLCHAIN: "vs-14-2015-sdk-8-1"
       CONFIG: Debug
+      HAS_CPP14: OFF      
 
     - TOOLCHAIN: "vs-14-2015-win64-sdk-8-1"
       CONFIG: Release
+      HAS_CPP14: OFF      
 
     - TOOLCHAIN: "vs-14-2015-win64-sdk-8-1"
       CONFIG: Debug
+      HAS_CPP14: OFF            
 
 install:
   # Python 3
@@ -54,7 +58,7 @@ install:
 
 build_script:
 
-  - cmd: bin\build-appveyor.cmd "%CONFIG%" "%TOOLCHAIN%"
+  - cmd: bin\build-appveyor.cmd "%CONFIG%" "%TOOLCHAIN%" "%HAS_CPP14%"
 
 branches:
   except:
