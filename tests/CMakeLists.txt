@@ -19,5 +19,3 @@ if(NOT IOS AND NOT ANDROID)
   add_test(NAME FixedFunctionTest COMMAND fixed_function_test)
   add_test(NAME ThreadPoolTest COMMAND thread_pool_test)
 endif()
-
-
