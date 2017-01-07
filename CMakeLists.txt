@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3) # support visibility settings
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Modules")
 
-project(thread-pool-cpp VERSION 1.1.0 LANGUAGES CXX)
+project(thread-pool-cpp VERSION 1.1.0)
 
 option(THREAD_POOL_CPP_BUILD_TESTS "Build tests." OFF)
 option(THREAD_POOL_CPP_BUILD_BENCHMARKS "Build benchmarks." OFF)
